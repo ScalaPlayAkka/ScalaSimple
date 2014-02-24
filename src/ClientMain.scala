@@ -41,14 +41,24 @@ object ClientMain {
     println(updatableCol.findOne)
 
     //    Add 100 documents to “test” collection
-    for(i <- 1 to 100) updatableCol += new BasicDBObject("i", i)
+    for (i <- 1 to 100) updatableCol += new BasicDBObject("i", i)
 
     //    Query for 71st document in C collection
     val query = new BasicDBObject
     query.put("i", 71);
     val cursor = col.find(query)
-    while(cursor.hasNext()) {
+    while (cursor.hasNext()) {
       println(cursor.next())
+    }
+
+    //    Search for where i > 20
+    val rangeQuery = new BasicDBObject("i", new BasicDBObject("$gt", 20))
+
+    //    Skip first 20 docs, return 10 docs
+    val richQuery = Query(rangeQuery).skip(20).limit(10)
+    val cursor1 = col.find(richQuery)
+    while (cursor1.hasNext()) {
+      println(cursor1.next());
     }
   }
 }

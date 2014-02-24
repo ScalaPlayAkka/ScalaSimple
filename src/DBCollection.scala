@@ -1,4 +1,4 @@
-import com.mongodb.{DBCollection => MongoDBCollection}
+import com.mongodb.{DBCollection => MongoDBCollection, DBObject}
 
 /**
  *
@@ -16,3 +16,36 @@ class DBCollection(override val underlying: MongoDBCollection) extends ReadOnly 
   def updatableCollection(name: String) = new
       DBCollection(collection(name)) with Updatable with Memoizer
 }
+
+/**
+ *
+ */
+sealed trait QueryOption
+
+/**
+ *
+ */
+case object NoOption extends QueryOption
+
+/**
+ *
+ * @param sorting
+ * @param anotherOption
+ */
+case class Sort(sorting: DBObject, anotherOption: QueryOption) extends QueryOption
+
+/**
+ *
+ * @param number
+ * @param anotherOption
+ */
+case class Skip(number: Int, anotherOption: QueryOption)
+  extends QueryOption
+
+/**
+ *
+ * @param limit
+ * @param anotherOption
+ */
+case class Limit(limit: Int, anotherOption: QueryOption)
+  extends QueryOption
